@@ -1,18 +1,18 @@
 require('dotenv').config();
-const fs = require('fs');
+var fs = require('fs');
 
-const request = require('request');
-const Table = require('cli-table');
+var request = require('request');
+var Table = require('cli-table');
 
-const Spotify = require('node-spotify-api');
-const Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
+var Twitter = require('twitter');
 
-const keys = require('./keys');
+var keys = require('./keys');
 
 //instantiations:
-const client = new Twitter(keys.twitter);
-const spotify = new Spotify(keys.spotify);
-const table = new Table({
+var client = new Twitter(keys.twitter);
+var spotify = new Spotify(keys.spotify);
+var table = new Table({
   chars: {
     top: '',
     'top-mid': '',
@@ -34,13 +34,13 @@ const table = new Table({
 });
 
 //HANDLE LOGGING INFO
-const getDate = () => {
+var getDate = () => {
   var nowUgly = Date.now();
   var timePretty = new Date(nowUgly);
   return timePretty;
 };
 
-const fetchAllLogs = () => {
+var fetchAllLogs = () => {
   try {
     var allTheLogs = fs.readFileSync('log.txt', 'utf8');
 
@@ -49,17 +49,17 @@ const fetchAllLogs = () => {
     return [];
   }
 };
-const logData = text => {
+var logData = text => {
   fs.writeFileSync('log.txt', JSON.stringify(text));
 };
-const updateLog = results => {
+var updateLog = results => {
   var currentLogs = fetchAllLogs();
   currentLogs.push(results);
   logData(currentLogs);
 };
 
 //LIRI COMMANDS
-const spotifyThisSong = title => {
+var spotifyThisSong = title => {
   spotify.search(
     {
       type: 'track',
@@ -70,9 +70,9 @@ const spotifyThisSong = title => {
         return console.log('Error occurred: ' + err);
       }
 
-      const preview = data.tracks.items[0].preview_url;
-      const artist = data.tracks.items[0].artists[0].name;
-      const album = data.tracks.items[0].artists[0].name;
+      var preview = data.tracks.items[0].preview_url;
+      var artist = data.tracks.items[0].artists[0].name;
+      var album = data.tracks.items[0].artists[0].name;
       table.push(
         { Title: title || 'A Town Called Malice' },
         { Artist: artist || 'The Jam' },
@@ -92,12 +92,12 @@ const spotifyThisSong = title => {
   );
 };
 
-const movieThis = name => {
-  const url = `http://www.omdbapi.com/?t=${name ||
+var movieThis = name => {
+  var url = `http://www.omdbapi.com/?t=${name ||
     'the castle'}&apikey=trilogy`;
   request(url, function(error, response, body) {
     if (!error && response.statusCode === 200) {
-      const info = JSON.parse(body);
+      var info = JSON.parse(body);
       table.push(
         { 'Movie Title': info.Title },
         { 'Release Date': info.Year },
@@ -125,7 +125,7 @@ const movieThis = name => {
   });
 };
 
-const myTweets = () => {
+var myTweets = () => {
   client.get(
     'statuses/user_timeline.json?screen_name=KevinTomas5&count=20',
     function(error, tweets, response) {
@@ -134,7 +134,6 @@ const myTweets = () => {
         table.push(
           { tweet: tweets[tweet]['text'] },
           { on: tweets[tweet]['created_at'] },
-          { '': '🐦 🐦 🐦 🐦 🐦 🐦 🐦 🐦' }
         );
       }
       var tweetLog = {
@@ -146,16 +145,16 @@ const myTweets = () => {
     }
   );
 };
-const randomCommandom = () => {
+var randomCommandom = () => {
   fs.readFile('random.txt', 'utf8', function(error, text) {
     if (error) throw error;
     var args = text.split(',');
-    const song = args[1];
-    const doThis = args[0];
+    var song = args[1];
+    var doThis = args[0];
     spotifyThisSong(song);
   });
 };
-const showLog = () => {
+var showLog = () => {
   var logTxt = fetchAllLogs();
   console.log(logTxt);
 };

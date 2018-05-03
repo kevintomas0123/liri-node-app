@@ -1,13 +1,13 @@
 require("dotenv").config();
 
 //NODE MODULES
-const fs = require('fs');
+var fs = require('fs');
 
 //THIRD PARTY MODULES
-const inquirer = require('inquirer');
+var inquirer = require('inquirer');
 
 // OWN MODULES
-const commands = require('./commands');
+var commands = require('./commands');
 
 console.clear()
 
